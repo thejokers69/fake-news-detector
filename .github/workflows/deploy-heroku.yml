@@ -5,6 +5,10 @@ on:
     branches: ["master"]
   workflow_dispatch:
     inputs:
+      deploy_branch:
+        description: "Branch to deploy (default: master)"
+        required: false
+        default: "master"
       run_full_e2e:
         description: "Run Tests/test_full_app.py before deploy"
         required: false
@@ -17,9 +21,12 @@ jobs:
       HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
       HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+      DEPLOY_BRANCH: ${{ github.event.inputs.deploy_branch || github.ref_name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.deploy_branch || github.ref_name }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -50,5 +57,5 @@ jobs:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          branch: "master"
+          branch: ${{ env.DEPLOY_BRANCH }}
           usedocker: false
