@@ -1,0 +1,14 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.swo
+.env
+.git
+.gitignore
+.DS_Store
+node_modules
+DATASETS
+models/*.pkl
+nltk_data

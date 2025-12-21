@@ -114,7 +114,7 @@ def predict_fake_news(text):
 @app.route("/", methods=["GET"])
 def home():
     """Page d'accueil avec le formulaire"""
-    return render_template("index.html")
+    return render_template("index.html", submitted_text="")
 
 
 @app.route("/predict", methods=["POST"])
@@ -134,11 +134,19 @@ def predict():
             # Prédiction
             prediction = predict_fake_news(news_text)
 
-        return render_template("index.html", prediction=prediction)
+            # Ajouter un aperçu pour l'affichage
+            prediction["input_preview"] = news_text[:240]
+            prediction["input_length"] = len(news_text)
+
+        return render_template(
+            "index.html", prediction=prediction, submitted_text=news_text
+        )
 
     except Exception as e:
         prediction = {"label": "Erreur", "probability": 0.0, "error": str(e)}
-        return render_template("index.html", prediction=prediction)
+        return render_template(
+            "index.html", prediction=prediction, submitted_text=news_text
+        )
 
 
 @app.route("/health")

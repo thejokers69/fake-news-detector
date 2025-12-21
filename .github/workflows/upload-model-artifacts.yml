@@ -1,0 +1,32 @@
+name: Upload model artifacts
+
+on:
+    workflow_dispatch:
+        inputs:
+            model_url:
+                description: "HTTPS URL to fake_news_model.pkl"
+                required: true
+            vectorizer_url:
+                description: "HTTPS URL to tfidf_vectorizer.pkl"
+                required: true
+
+jobs:
+    upload:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Download model files
+              run: |
+                  mkdir -p models
+                  curl -fL "${{ github.event.inputs.model_url }}" -o models/fake_news_model.pkl
+                  curl -fL "${{ github.event.inputs.vectorizer_url }}" -o models/tfidf_vectorizer.pkl
+                  ls -lh models
+
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: models-bundle
+                  path: models/*.pkl
+                  if-no-files-found: error

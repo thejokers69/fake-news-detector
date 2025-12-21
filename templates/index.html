@@ -5,95 +5,213 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fake News Detector</title>
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <style>
-      .result-card {
-        margin-top: 20px;
-      }
-      .fake-result {
-        border-left: 5px solid #dc3545;
-      }
-      .real-result {
-        border-left: 5px solid #28a745;
-      }
-      body {
-        background-color: #f8f9fa;
-      }
-      .container {
-        max-width: 800px;
-      }
-    </style>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
   </head>
   <body>
-    <div class="container mt-5">
-      <div class="row justify-content-center">
-        <div class="col-md-8">
-          <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-              <h1 class="h3 mb-0">📰 Fake News Detector</h1>
-            </div>
-            <div class="card-body">
-              <p class="text-muted mb-4">
-                Collez le texte d'un article ou d'une nouvelle ci-dessous pour
-                vérifier s'il s'agit d'une fake news.
-              </p>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+      <div class="container">
+        <a class="navbar-brand fw-semibold" href="/">
+          <i class="fa-solid fa-newspaper me-2"></i>
+          Fake News Detector
+        </a>
+      </div>
+    </nav>
 
-              <form method="POST" action="/predict">
-                <div class="mb-3">
-                  <label for="news_text" class="form-label fw-bold"
-                    >Texte de l'article :</label
-                  >
+    <header class="hero-section text-center text-dark">
+      <div class="container">
+        <h1 class="display-5 fw-bold mb-3">Détection de fake news</h1>
+        <p class="lead text-muted mb-0">
+          Analysez un article en quelques secondes grâce au modèle
+          LogisticRegression entraîné sur les datasets True/Fake.
+        </p>
+      </div>
+    </header>
+
+    <main class="container py-4">
+      <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-9">
+          <div class="card shadow form-card border-0 mb-4">
+            <div class="card-body p-4 p-md-5">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="pill-icon">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <div>
+                  <h2 class="h4 mb-1">Collez votre article</h2>
+                  <p class="text-muted mb-0">
+                    Le texte sera prétraité (minuscule, lemmatization, stop
+                    words) avant la prédiction.
+                  </p>
+                </div>
+              </div>
+
+              <form method="POST" action="/predict" novalidate>
+                <div class="mb-4">
+                  <label for="news_text" class="form-label fw-semibold">
+                    Texte à analyser
+                  </label>
                   <textarea
                     class="form-control"
                     id="news_text"
                     name="news_text"
-                    rows="6"
-                    placeholder="Collez ici le contenu de l'article à analyser..."
+                    rows="8"
+                    placeholder="Collez ici le titre et le contenu de l'article..."
                     required
-                  ></textarea>
+                  >
+{{ submitted_text or '' }}</textarea
+                  >
                 </div>
 
-                <div class="d-grid">
-                  <button type="submit" class="btn btn-primary btn-lg">
-                    🔍 Analyser
+                <div class="d-grid d-sm-flex gap-3">
+                  <button
+                    type="submit"
+                    class="btn btn-primary btn-lg flex-fill"
+                  >
+                    <i class="fa-solid fa-magnifying-glass me-2"></i>
+                    Analyser
                   </button>
+                  <a href="/" class="btn btn-outline-secondary flex-fill">
+                    <i class="fa-solid fa-rotate me-2"></i>
+                    Réinitialiser
+                  </a>
                 </div>
               </form>
+            </div>
+          </div>
 
-              {% if prediction %}
-              <div
-                class="result-card card mt-4 {% if prediction.label == 'Fake' %}fake-result{% else %}real-result{% endif %}"
+          {% if prediction %} {% set is_error = prediction.label == 'Erreur' %}
+          {% if is_error %}
+          <div class="alert alert-warning shadow-sm" role="alert">
+            <i class="fa-solid fa-circle-exclamation me-2"></i>
+            {{ prediction.error or "Une erreur est survenue pendant l'analyse."
+            }}
+          </div>
+          {% else %} {% set is_fake = prediction.label == 'Fake' %} {% set
+          confidence = (prediction.probability * 100) | round(1) %}
+          <div class="card shadow result-card border-0 mb-4">
+            <div class="card-body p-4 p-md-5 text-center">
+              <div class="result-icon {{ 'fake' if is_fake else 'real' }} mb-3">
+                {% if is_fake %}
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                {% else %}
+                <i class="fa-solid fa-shield-check"></i>
+                {% endif %}
+              </div>
+
+              <h3
+                class="mb-2 {{ 'text-danger' if is_fake else 'text-success' }}"
               >
-                <div class="card-body">
-                  <h5 class="card-title">
-                    {% if prediction.label == 'Fake' %} ❌ Résultat : Fake News
-                    {% else %} ✅ Résultat : Article Authentique {% endif %}
-                  </h5>
-                  <p class="card-text">
-                    <strong>Probabilité :</strong> {{
-                    "%.1f"|format(prediction.probability * 100) }}%
+                {% if is_fake %}Article suspecté de désinformation{% else
+                %}Article probablement authentique{% endif %}
+              </h3>
+              <p class="text-muted mb-4">
+                Modèle LogisticRegression (TF-IDF bi-grammes) entraîné sur
+                DATASETS/True.csv et DATASETS/Fake.csv.
+              </p>
+
+              <div
+                class="d-flex justify-content-center align-items-center gap-3 mb-3"
+              >
+                <span
+                  class="badge rounded-pill {{ 'bg-danger' if is_fake else 'bg-success' }} px-3 py-2"
+                >
+                  {{ 'Fake' if is_fake else 'Real' }}
+                </span>
+                <span class="badge bg-secondary px-3 py-2"
+                  >Confiance : {{ confidence }}%</span
+                >
+              </div>
+
+              <div
+                class="progress confidence-bar mb-4"
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="{{ confidence }}"
+              >
+                <div
+                  class="progress-bar {{ 'bg-danger' if is_fake else 'bg-success' }}"
+                  style="width: {{ confidence }}%"
+                ></div>
+              </div>
+
+              {% if prediction.input_preview %}
+              <div class="text-start preview-box">
+                <p class="text-muted small mb-2">
+                  Extrait analysé ({{ prediction.input_length }} caractères) :
+                </p>
+                <blockquote class="blockquote mb-0">
+                  <p class="mb-0">
+                    {{ prediction.input_preview }}{% if prediction.input_length
+                    > 240 %}…{% endif %}
                   </p>
-                  <div class="progress mt-3">
-                    <div
-                      class="progress-bar {% if prediction.label == 'Fake' %}bg-danger{% else %}bg-success{% endif %}"
-                      role="progressbar"
-                      style="width: {{ prediction.probability * 100 }}%"
-                      aria-valuenow="{{ prediction.probability * 100 }}"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
-                  </div>
-                </div>
+                </blockquote>
               </div>
               {% endif %}
             </div>
           </div>
+          {% endif %} {% endif %}
+
+          <section class="info-cards row g-3 g-md-4">
+            <div class="col-md-4">
+              <div class="info-card h-100 p-3">
+                <div class="icon-pill bg-primary text-white">
+                  <i class="fa-solid fa-gears"></i>
+                </div>
+                <h5 class="mt-3 mb-2">Pipeline aligné</h5>
+                <p class="text-muted mb-0">
+                  Prétraitement identique à l'entraînement (minuscule, stop
+                  words anglais, WordNet lemmatizer).
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="info-card h-100 p-3">
+                <div class="icon-pill bg-success text-white">
+                  <i class="fa-solid fa-server"></i>
+                </div>
+                <h5 class="mt-3 mb-2">Endpoints</h5>
+                <p class="text-muted mb-0">
+                  `/` pour le formulaire, `/predict` (POST) pour l'analyse,
+                  `/health` pour l'état du modèle.
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="info-card h-100 p-3">
+                <div class="icon-pill bg-warning text-dark">
+                  <i class="fa-solid fa-flask"></i>
+                </div>
+                <h5 class="mt-3 mb-2">Tests rapides</h5>
+                <p class="text-muted mb-0">
+                  `python start.py` pour vérifier, `python
+                  Tests/test_full_app.py` pour l'E2E.
+                </p>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
-    </div>
+    </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <footer class="footer text-center text-white py-3">
+      <div class="container">
+        <small
+          >Projet Data Science · Modèle LogisticRegression · Port 8080</small
+        >
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

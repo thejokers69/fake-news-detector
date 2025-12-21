@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-gradient: linear-gradient(135deg, #eef1f7 0%, #d9e4ff 100%);
+  --primary: #4a6cf7;
+  --primary-dark: #3248c5;
+  --success: #2ecc71;
+  --danger: #e74c3c;
+  --muted: #6c757d;
+  --card-radius: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Space Grotesk', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg-gradient);
+  color: #1f2430;
+  min-height: 100vh;
+}
+
+.navbar {
+  backdrop-filter: blur(8px);
+}
+
+.hero-section {
+  padding: 48px 0;
+}
+
+.form-card,
+.result-card {
+  border-radius: var(--card-radius);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.pill-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(74, 108, 247, 0.1);
+  color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+textarea.form-control {
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fff;
+  transition: all 0.25s ease;
+}
+
+textarea.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(74, 108, 247, 0.15);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(74, 108, 247, 0.25);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 34px rgba(74, 108, 247, 0.3);
+}
+
+.btn-outline-secondary {
+  border-radius: 12px;
+}
+
+.result-icon {
+  width: 90px;
+  height: 90px;
+  border-radius: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  background: #f3f4f6;
+}
+
+.result-icon.fake {
+  color: var(--danger);
+  background: rgba(231, 76, 60, 0.08);
+}
+
+.result-icon.real {
+  color: var(--success);
+  background: rgba(46, 204, 113, 0.08);
+}
+
+.progress.confidence-bar {
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.preview-box {
+  padding: 16px;
+  background: #f9fafc;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.info-cards .info-card {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.04);
+}
+
+.icon-pill {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.footer {
+  background: #121622;
+  margin-top: 32px;
+}
