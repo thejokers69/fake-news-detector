@@ -31,20 +31,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Download model artifacts (latest successful upload)
-        continue-on-error: true
-        uses: dawidd6/action-download-artifact@v3
-        with:
-          workflow: upload-model-artifacts.yml
-          workflow_conclusion: success
-          name: models-bundle
-          path: models
-          branch: master
-
-      - name: Fetch models for tests
-        run: |
-          bash scripts/fetch_models.sh
-
       - name: Run smoke tests (models)
         run: |
           python -m Tests.test_models
