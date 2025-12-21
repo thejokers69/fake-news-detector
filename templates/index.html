@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fake News Detector</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .result-card {
+        margin-top: 20px;
+      }
+      .fake-result {
+        border-left: 5px solid #dc3545;
+      }
+      .real-result {
+        border-left: 5px solid #28a745;
+      }
+      body {
+        background-color: #f8f9fa;
+      }
+      .container {
+        max-width: 800px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+              <h1 class="h3 mb-0">📰 Fake News Detector</h1>
+            </div>
+            <div class="card-body">
+              <p class="text-muted mb-4">
+                Collez le texte d'un article ou d'une nouvelle ci-dessous pour
+                vérifier s'il s'agit d'une fake news.
+              </p>
+
+              <form method="POST" action="/predict">
+                <div class="mb-3">
+                  <label for="news_text" class="form-label fw-bold"
+                    >Texte de l'article :</label
+                  >
+                  <textarea
+                    class="form-control"
+                    id="news_text"
+                    name="news_text"
+                    rows="6"
+                    placeholder="Collez ici le contenu de l'article à analyser..."
+                    required
+                  ></textarea>
+                </div>
+
+                <div class="d-grid">
+                  <button type="submit" class="btn btn-primary btn-lg">
+                    🔍 Analyser
+                  </button>
+                </div>
+              </form>
+
+              {% if prediction %}
+              <div
+                class="result-card card mt-4 {% if prediction.label == 'Fake' %}fake-result{% else %}real-result{% endif %}"
+              >
+                <div class="card-body">
+                  <h5 class="card-title">
+                    {% if prediction.label == 'Fake' %} ❌ Résultat : Fake News
+                    {% else %} ✅ Résultat : Article Authentique {% endif %}
+                  </h5>
+                  <p class="card-text">
+                    <strong>Probabilité :</strong> {{
+                    "%.1f"|format(prediction.probability * 100) }}%
+                  </p>
+                  <div class="progress mt-3">
+                    <div
+                      class="progress-bar {% if prediction.label == 'Fake' %}bg-danger{% else %}bg-success{% endif %}"
+                      role="progressbar"
+                      style="width: {{ prediction.probability * 100 }}%"
+                      aria-valuenow="{{ prediction.probability * 100 }}"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

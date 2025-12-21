@@ -1,0 +1,25 @@
+# Exemples de textes pour tester le Fake News Detector
+
+## Articles authentiques (Real News) :
+
+1. "The World Health Organization announced today that COVID-19 vaccines have saved millions of lives worldwide. According to their latest report, vaccination campaigns have prevented over 14 million deaths in the first year of global distribution."
+
+2. "NASA scientists have confirmed the discovery of water ice on Mars. The Mars Reconnaissance Orbiter captured images showing ice deposits in craters near the planet's south pole, supporting previous evidence of water on the Red Planet."
+
+3. "The European Union reached a historic agreement on climate change policy yesterday. Member states committed to reducing carbon emissions by 55% by 2030, with investments in renewable energy reaching €500 billion."
+
+## Fake News potentielles :
+
+1. "BREAKING: Scientists discover that vaccines contain microchips designed to control human behavior. Government officials are working with pharmaceutical companies to track citizens through 5G networks."
+
+2. "SHOCKING REVELATION: Mars rover finds ancient pyramids built by aliens. NASA is covering up evidence of extraterrestrial civilization on the red planet to prevent public panic."
+
+3. "EXCLUSIVE: EU leaders secretly plan to ban all cars by 2025. Hidden documents reveal agenda to force citizens into public transportation while elites keep their private jets."
+
+## Textes neutres/informatifs :
+
+1. "Weather forecast for tomorrow: Sunny skies with temperatures ranging from 15°C to 22°C. Light winds from the northwest at 10-15 km/h."
+
+2. "The new iPhone 15 features improved camera capabilities and longer battery life. Pre-orders begin next Friday at major retailers."
+
+3. "Stock market update: Technology sector shows growth with major indices up 2.3% this week. Investors remain optimistic about Q4 earnings reports."
