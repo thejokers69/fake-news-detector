@@ -29,6 +29,14 @@ lemmatizer = WordNetLemmatizer()
 stop_words = set(stopwords.words("english"))
 
 
+@app.before_request
+def _ensure_model_loaded():
+    """Charge le modèle lorsque le serveur démarre (utile pour gunicorn/Heroku)."""
+    global model, vectorizer
+    if model is None or vectorizer is None:
+        load_model()
+
+
 def load_model():
     """Charge le modèle ML et le vectorizer"""
     global model, vectorizer
