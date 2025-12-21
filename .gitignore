@@ -45,3 +45,5 @@ Thumbs.db
 
 # Données NLTK
 nltk_data/
+docs-instuctions/perplexity/implementation.md
+docs-instuctions/perplexity/instructions.md

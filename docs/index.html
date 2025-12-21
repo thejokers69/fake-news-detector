@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirection vers l'application</title>
+    <meta
+      http-equiv="refresh"
+      content="0; url=https://my-fake-news-detector-556ffc19f6e8.herokuapp.com/"
+    />
+    <style>
+      body {
+        font-family: -apple-system, Segoe UI, Roboto, sans-serif;
+        padding: 2rem;
+      }
+      .card {
+        max-width: 720px;
+        margin: auto;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        padding: 1.5rem;
+      }
+      a {
+        color: #2563eb;
+        text-decoration: none;
+      }
+    </style>
+    <script>
+      window.location.replace(
+        "https://my-fake-news-detector-556ffc19f6e8.herokuapp.com/"
+      );
+    </script>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Redirection…</h1>
+      <p>Vous allez être redirigé(e) vers l'application hébergée sur Heroku.</p>
+      <p>
+        Si rien ne se passe, cliquez ici :
+        <a href="https://my-fake-news-detector-556ffc19f6e8.herokuapp.com/"
+          >Ouvrir l'application</a
+        >
+      </p>
+    </div>
+  </body>
+</html>
