@@ -1,5 +1,8 @@
 # Modèles ML (trop volumineux pour Git)
 models/*.pkl
+# Allow committing the two required model files for exam simplicity
+!models/fake_news_model.pkl
+!models/tfidf_vectorizer.pkl
 models/*.joblib
 models/*.h5
 models/*.pb
