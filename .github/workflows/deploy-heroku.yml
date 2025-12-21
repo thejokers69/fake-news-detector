@@ -1,64 +1,68 @@
 name: Deploy to Heroku
 
 on:
-    push:
-        branches: ["master"]
-    workflow_dispatch:
-        inputs:
-            run_full_e2e:
-                description: "Run Tests/test_full_app.py before deploy"
-                required: false
-                default: "true"
+  push:
+    branches: ["master"]
+  workflow_dispatch:
+    inputs:
+      run_full_e2e:
+        description: "Run Tests/test_full_app.py before deploy"
+        required: false
+        default: "true"
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        env:
-            HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-            HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
-            HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+      HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-            - name: Set up Python
-              uses: actions/setup-python@v5
-              with:
-                  python-version: "3.10"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
 
-            - name: Install dependencies
-              run: |
-                  python -m pip install --upgrade pip
-                  pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-            - name: Download model artifacts (latest successful upload)
-              continue-on-error: true
-              uses: dawidd6/action-download-artifact@v3
-              with:
-                  workflow: upload-model-artifacts.yml
-                  workflow_conclusion: success
-                  name: models-bundle
-                  path: models
-                  branch: master
+      - name: Download model artifacts (latest successful upload)
+        continue-on-error: true
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: upload-model-artifacts.yml
+          workflow_conclusion: success
+          name: models-bundle
+          path: models
+          branch: master
 
-            - name: Fetch models for tests
-              run: |
-                  bash scripts/fetch_models.sh
+      - name: Fetch models for tests
+        run: |
+          bash scripts/fetch_models.sh
 
-            - name: Run smoke tests (models)
-              run: |
-                  python -m Tests.test_models
+      - name: Run smoke tests (models)
+        run: |
+          python -m Tests.test_models
 
-            - name: Run end-to-end test (server spin-up)
-              if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run_full_e2e == 'true' }}
-              run: |
-                  python -m Tests.test_full_app
+      - name: Run end-to-end test (server spin-up)
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run_full_e2e == 'true' }}
+        run: |
+          python -m Tests.test_full_app
 
-            - name: Deploy to Heroku
-              uses: akhileshns/heroku-deploy@v3.12.12
-              with:
-                  heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-                  heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-                  heroku_email: ${{ secrets.HEROKU_EMAIL }}
-                  branch: "master"
-                  usedocker: false
+      - name: Install Heroku CLI
+        run: |
+          curl -fsSL https://cli-assets.heroku.com/install.sh | sh
+
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          branch: "master"
+          usedocker: false
