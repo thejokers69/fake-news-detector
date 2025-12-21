@@ -13,6 +13,8 @@ on:
 jobs:
     upload:
         runs-on: ubuntu-latest
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -20,8 +22,9 @@ jobs:
             - name: Download model files
               run: |
                   mkdir -p models
-                  curl -fL "${{ github.event.inputs.model_url }}" -o models/fake_news_model.pkl
-                  curl -fL "${{ github.event.inputs.vectorizer_url }}" -o models/tfidf_vectorizer.pkl
+                    # Use auth header so private repos/releases work (public still fine)
+                    curl -fL -H "Authorization: Bearer ${GITHUB_TOKEN}" "${{ github.event.inputs.model_url }}" -o models/fake_news_model.pkl
+                    curl -fL -H "Authorization: Bearer ${GITHUB_TOKEN}" "${{ github.event.inputs.vectorizer_url }}" -o models/tfidf_vectorizer.pkl
                   ls -lh models
 
             - name: Upload artifacts
