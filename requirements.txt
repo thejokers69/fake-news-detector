@@ -1,4 +1,4 @@
-Django==4.2.25
+django>=4.2.27
 scikit-learn==1.7.2
 pandas>=2.3.0
 numpy>=1.26.0
