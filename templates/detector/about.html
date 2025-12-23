@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% block title %}About - Fake News Detector{% endblock %}
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <div class="row justify-content-center text-center">
+      <div class="col-lg-8">
+        <h1 class="display-4 fw-bold mb-4">
+          <i class="fa-solid fa-info-circle me-3"></i>
+          About This Project
+        </h1>
+        <p class="lead mb-4">
+          Understanding how machine learning helps combat misinformation online.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
+<section class="py-5">
+  <div class="container">
+    <div class="row g-5">
+
+      <!-- What is Fake News Detection -->
+      <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body p-4">
+            <div class="icon-pill bg-primary text-white mx-auto mb-3">
+              <i class="fa-solid fa-question-circle"></i>
+            </div>
+            <h3 class="card-title text-center mb-3">What is Fake News Detection?</h3>
+            <p class="card-text">
+              Fake news detection uses machine learning to analyze news articles and determine their authenticity.
+              Our system employs machine learning algorithms trained on large datasets to identify patterns that
+              distinguish genuine journalism from misinformation.
+            </p>
+            <p class="card-text">
+              The importance of reliable news verification has grown significantly with the rise of social media
+              and digital content creation, where false information can spread rapidly.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- How It Works -->
+      <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body p-4">
+            <div class="icon-pill bg-success text-white mx-auto mb-3">
+              <i class="fa-solid fa-cogs"></i>
+            </div>
+            <h3 class="card-title text-center mb-3">How Machine Learning Works</h3>
+            <div class="mb-3">
+              <h6><i class="fa-solid fa-file-text me-2"></i>Text Preprocessing</h6>
+              <small class="text-muted">Cleans and normalizes text using NLTK (stopwords removal, lemmatization)</small>
+            </div>
+            <div class="mb-3">
+              <h6><i class="fa-solid fa-vector-square me-2"></i>Feature Extraction</h6>
+              <small class="text-muted">Converts text to numerical features using TF-IDF vectorization</small>
+            </div>
+            <div class="mb-3">
+              <h6><i class="fa-solid fa-brain me-2"></i>Machine Learning</h6>
+              <small class="text-muted">Logistic Regression model classifies articles as Real or Fake</small>
+            </div>
+            <div class="mb-3">
+              <h6><i class="fa-solid fa-gauge-high me-2"></i>Confidence Scoring</h6>
+              <small class="text-muted">Provides probability scores for prediction certainty</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Technology Stack -->
+      <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body p-4">
+            <div class="icon-pill bg-info text-white mx-auto mb-3">
+              <i class="fa-solid fa-code"></i>
+            </div>
+            <h3 class="card-title text-center mb-3">Technology Stack</h3>
+            <div class="row text-center">
+              <div class="col-6 mb-3">
+                <div class="h5 text-primary">Backend</div>
+                <small class="text-muted">Django 4.2+</small>
+              </div>
+              <div class="col-6 mb-3">
+                <div class="h5 text-success">ML</div>
+                <small class="text-muted">scikit-learn, NLTK</small>
+              </div>
+              <div class="col-6 mb-3">
+                <div class="h5 text-warning">Data</div>
+                <small class="text-muted">pandas, numpy</small>
+              </div>
+              <div class="col-6 mb-3">
+                <div class="h5 text-danger">Frontend</div>
+                <small class="text-muted">Bootstrap 5, HTML5</small>
+              </div>
+            </div>
+            <hr>
+            <div class="text-center">
+              <small class="text-muted">
+                <i class="fa-solid fa-server me-1"></i>
+                Deployed on Heroku with Docker support
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Performance Metrics -->
+      <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body p-4">
+            <div class="icon-pill bg-warning text-dark mx-auto mb-3">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <h3 class="card-title text-center mb-3">Performance Metrics</h3>
+            <div class="row text-center mb-4">
+              <div class="col-6">
+                <div class="display-6 text-success fw-bold">98.9%</div>
+                <div class="text-muted small">Accuracy</div>
+              </div>
+              <div class="col-6">
+                <div class="display-6 text-primary fw-bold">45K</div>
+                <div class="text-muted small">Training Articles</div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <h6>Model Details:</h6>
+              <ul class="list-unstyled small">
+                <li><i class="fa-solid fa-check text-success me-2"></i>Logistic Regression classifier</li>
+                <li><i class="fa-solid fa-check text-success me-2"></i>TF-IDF vectorization (5,000 features)</li>
+                <li><i class="fa-solid fa-check text-success me-2"></i>NLTK text preprocessing</li>
+                <li><i class="fa-solid fa-check text-success me-2"></i>80/20 train-test split</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Usage Section -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="card shadow-sm">
+          <div class="card-header bg-light">
+            <h4 class="mb-0">
+              <i class="fa-solid fa-play-circle me-2"></i>
+              How to Use
+            </h4>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <div class="text-center">
+                  <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                    <span class="fw-bold">1</span>
+                  </div>
+                  <h6 class="mt-2">Paste Article</h6>
+                  <small class="text-muted">Copy and paste news article text into the analysis form</small>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="text-center">
+                  <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                    <span class="fw-bold">2</span>
+                  </div>
+                  <h6 class="mt-2">Analyze</h6>
+                  <small class="text-muted">Click "Analyze Article" to process the text</small>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="text-center">
+                  <div class="bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                    <span class="fw-bold">3</span>
+                  </div>
+                  <h6 class="mt-2">Review Results</h6>
+                  <small class="text-muted">View authenticity prediction with confidence score</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="alert alert-warning">
+          <h6 class="alert-heading">
+            <i class="fa-solid fa-exclamation-triangle me-2"></i>
+            Important Disclaimer
+          </h6>
+          <p class="mb-0">
+            This tool is designed to assist with news verification but should not be considered definitive.
+            Always cross-reference information with multiple reliable sources and use critical thinking when
+            evaluating news content.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}

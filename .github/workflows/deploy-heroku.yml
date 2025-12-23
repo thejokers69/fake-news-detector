@@ -40,12 +40,12 @@ jobs:
 
       - name: Run smoke tests (models)
         run: |
-          python -m Tests.test_models
+          python manage.py test tests.test_models
 
       - name: Run end-to-end test (server spin-up)
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run_full_e2e == 'true' }}
         run: |
-          python -m Tests.test_full_app
+          python tests/test_full_app.py
 
       - name: Install Heroku CLI
         run: |

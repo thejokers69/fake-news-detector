@@ -42,6 +42,11 @@ def analyze(request):
     return render(request, "detector/home.html")
 
 
+def about(request):
+    """About page with project information"""
+    return render(request, "detector/about.html")
+
+
 def health(request):
     """Health endpoint to check models status"""
     from ml.model import model, vectorizer

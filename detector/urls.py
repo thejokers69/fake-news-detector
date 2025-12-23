@@ -6,5 +6,6 @@ app_name = "detector"
 urlpatterns = [
     path("", views.home, name="home"),
     path("analyze/", views.analyze, name="analyze"),
+    path("about/", views.about, name="about"),
     path("health/", views.health, name="health"),
 ]

@@ -17,6 +17,12 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'detector/home.html')
 
+    def test_about_view(self):
+        """Test about page view"""
+        response = self.client.get(reverse('detector:about'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'detector/about.html')
+
     def test_home_view_direct_url(self):
         """Test home page view with direct URL"""
         response = self.client.get('/')
