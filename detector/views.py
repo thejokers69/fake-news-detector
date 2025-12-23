@@ -6,13 +6,10 @@ from ml.model import predict_fake_news
 
 
 def home(request):
-    """Page d'accueil avec le formulaire"""
-    return render(request, "detector/home.html")
+    """Page d'accueil avec le formulaire et les résultats"""
+    prediction = None
+    submitted_text = None
 
-
-@csrf_exempt
-def analyze(request):
-    """Vue pour analyser le texte soumis"""
     if request.method == "POST":
         # Récupérer le texte du formulaire
         news_text = request.POST.get("news_text", "").strip()
@@ -28,15 +25,30 @@ def analyze(request):
             prediction = predict_fake_news(news_text)
 
         # Ajouter des informations supplémentaires pour l'affichage
-        prediction["input_preview"] = news_text[:240]
-        prediction["input_length"] = len(news_text)
-        prediction["confidence_percent"] = round(prediction["probability"] * 100, 1)
+        if prediction and prediction.get("label") != "Erreur":
+            prediction["input_preview"] = news_text[:240]
+            prediction["input_length"] = len(news_text)
+            prediction["confidence_percent"] = round(prediction["probability"] * 100, 1)
 
-        return render(
-            request,
-            "detector/result.html",
-            {"prediction": prediction, "submitted_text": news_text},
-        )
+        submitted_text = news_text
+
+    return render(request, "detector/home.html", {
+        "prediction": prediction,
+        "submitted_text": submitted_text
+    })
+
+
+def analyze(request):
+    """Vue pour analyser le texte soumis - redirects to home for consistency"""
+    if request.method == "POST":
+        # Redirect to home view with POST data
+        from django.http import HttpResponseRedirect
+        from django.urls import reverse
+
+        # Create a new request to home with the same POST data
+        home_url = reverse('detector:home')
+        # For simplicity, just redirect to home - the form will handle it
+        return HttpResponseRedirect(home_url)
 
     # Si ce n'est pas une requête POST, rediriger vers la page d'accueil
     return render(request, "detector/home.html")

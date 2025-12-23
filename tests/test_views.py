@@ -23,15 +23,9 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'detector/about.html')
 
-    def test_home_view_direct_url(self):
-        """Test home page view with direct URL"""
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'detector/home.html')
-
     @patch('detector.views.predict_fake_news')
-    def test_analyze_view_post_valid(self, mock_predict):
-        """Test analyze view with valid POST data"""
+    def test_home_view_post_valid(self, mock_predict):
+        """Test home view with valid POST data"""
         # Mock the prediction result
         mock_predict.return_value = {
             "label": "Real",
@@ -40,10 +34,10 @@ class TestViews(TestCase):
         }
 
         test_text = "This is a test news article about technology."
-        response = self.client.post(reverse('detector:analyze'), {'news_text': test_text})
+        response = self.client.post(reverse('detector:home'), {'news_text': test_text})
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'detector/result.html')
+        self.assertTemplateUsed(response, 'detector/home.html')
 
         # Check that context contains prediction data
         self.assertIn('prediction', response.context)
@@ -53,18 +47,42 @@ class TestViews(TestCase):
         # Verify prediction was called
         mock_predict.assert_called_once_with(test_text)
 
-    def test_analyze_view_post_empty(self):
-        """Test analyze view with empty POST data"""
-        response = self.client.post(reverse('detector:analyze'), {'news_text': ''})
+    def test_home_view_post_empty(self):
+        """Test home view with empty POST data"""
+        response = self.client.post(reverse('detector:home'), {'news_text': ''})
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'detector/result.html')
+        self.assertTemplateUsed(response, 'detector/home.html')
 
         # Check that error prediction is returned
         prediction = response.context['prediction']
         self.assertEqual(prediction['label'], 'Erreur')
         self.assertEqual(prediction['probability'], 0.0)
         self.assertIn('error', prediction)
+
+    def test_home_view_direct_url(self):
+        """Test home page view with direct URL"""
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'detector/home.html')
+
+    @patch('detector.views.predict_fake_news')
+    def test_analyze_view_post_valid(self, mock_predict):
+        """Test analyze view with valid POST data - now redirects to home"""
+        test_text = "This is a test news article about technology."
+        response = self.client.post(reverse('detector:analyze'), {'news_text': test_text})
+
+        # Should redirect to home page
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.endswith('/'))  # Should redirect to home
+
+    def test_analyze_view_post_empty(self):
+        """Test analyze view with empty POST data - now redirects to home"""
+        response = self.client.post(reverse('detector:analyze'), {'news_text': ''})
+
+        # Should redirect to home page
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.endswith('/'))  # Should redirect to home
 
     def test_analyze_view_get(self):
         """Test analyze view with GET request redirects to home"""

@@ -58,7 +58,7 @@
               Paste the text of a news article below to check if it's fake news.
             </p>
 
-            <form method="post" action="{% url 'detector:analyze' %}">
+            <form method="post" action="{% url 'detector:home' %}">
               {% csrf_token %}
               <div class="mb-4">
                 <label for="news_text" class="form-label fw-bold">
@@ -102,6 +102,139 @@
     </div>
   </div>
 </section>
+
+<!-- Results Section -->
+{% if prediction %}
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        {% if prediction.label == 'Erreur' %}
+        <!-- Error Result -->
+        <div class="card result-card error-result mb-4">
+          <div class="card-body p-4 text-center">
+            <div class="mb-3">
+              <i class="fa-solid fa-triangle-exclamation text-warning fa-3x"></i>
+            </div>
+            <h3 class="text-warning mb-3">Analysis Error</h3>
+            <p class="text-muted mb-0">
+              {{ prediction.error|default:"An error occurred during analysis." }}
+            </p>
+          </div>
+        </div>
+        {% else %}
+        {% if prediction.label == 'Fake' %}
+        <!-- Fake Result -->
+        <div class="card result-card mb-4 fake-result">
+          <div class="card-body p-4 text-center">
+            <div class="result-icon mb-4">
+              <i class="fa-solid fa-triangle-exclamation fa-4x text-danger"></i>
+            </div>
+
+            <h2 class="mb-3 text-danger">
+              Article suspected of disinformation
+            </h2>
+
+            <p class="lead text-muted mb-4">
+              LogisticRegression model (TF-IDF bi-grams) trained on datasets.
+            </p>
+
+            <!-- Result Badge and Confidence -->
+            <div class="d-flex justify-content-center align-items-center gap-4 mb-4">
+              <span class="badge rounded-pill fs-6 px-4 py-2 bg-danger">
+                Fake
+              </span>
+              <div class="text-center">
+                <div class="h5 mb-1">Confidence: {{ prediction.confidence_percent }}%</div>
+                <small class="text-muted">Model certainty level</small>
+              </div>
+            </div>
+
+            <!-- Confidence Progress Bar -->
+            <div class="confidence-bar bg-light mb-4" role="progressbar">
+              <div
+                class="progress-bar bg-danger"
+                style="width: {{ prediction.confidence_percent }}%"
+                aria-valuenow="{{ prediction.confidence_percent }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <!-- Real Result -->
+        <div class="card result-card mb-4 real-result">
+          <div class="card-body p-4 text-center">
+            <div class="result-icon mb-4">
+              <i class="fa-solid fa-shield-check fa-4x text-success"></i>
+            </div>
+
+            <h2 class="mb-3 text-success">
+              Article probably authentic
+            </h2>
+
+            <p class="lead text-muted mb-4">
+              LogisticRegression model (TF-IDF bi-grams) trained on datasets.
+            </p>
+
+            <!-- Result Badge and Confidence -->
+            <div class="d-flex justify-content-center align-items-center gap-4 mb-4">
+              <span class="badge rounded-pill fs-6 px-4 py-2 bg-success">
+                Real
+              </span>
+              <div class="text-center">
+                <div class="h5 mb-1">Confidence: {{ prediction.confidence_percent }}%</div>
+                <small class="text-muted">Model certainty level</small>
+              </div>
+            </div>
+
+            <!-- Confidence Progress Bar -->
+            <div class="confidence-bar bg-light mb-4" role="progressbar">
+              <div
+                class="progress-bar bg-success"
+                style="width: {{ prediction.confidence_percent }}%"
+                aria-valuenow="{{ prediction.confidence_percent }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Input Preview -->
+        {% if prediction.input_preview %}
+        <div class="card shadow-sm">
+          <div class="card-header">
+            <h6 class="mb-0">
+              <i class="fa-solid fa-file-text me-2"></i>
+              Analyzed excerpt ({{ prediction.input_length }} characters){% if prediction.input_length > 240 %}…{% endif %}
+            </h6>
+          </div>
+          <div class="card-body">
+            <blockquote class="blockquote mb-0">
+              <p class="mb-0 text-muted fst-italic">
+                "{{ prediction.input_preview }}"
+              </p>
+            </blockquote>
+          </div>
+        </div>
+        {% endif %}
+        {% endif %}
+
+        <!-- Analyze Another Button -->
+        <div class="text-center mt-4">
+          <button type="button" class="btn btn-outline-primary" onclick="clearForm()">
+            <i class="fa-solid fa-plus me-2"></i>
+            Analyze Another Article
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
 
 <!-- Info Section -->
 <section class="py-5 bg-light">
@@ -157,6 +290,13 @@
   function clearText() {
     document.getElementById("news_text").value = "";
     document.getElementById("news_text").focus();
+  }
+
+  function clearForm() {
+    document.getElementById("news_text").value = "";
+    document.getElementById("news_text").focus();
+    // Scroll to top to show the form again
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 </script>
 {% endblock %}

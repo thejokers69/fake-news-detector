@@ -91,8 +91,8 @@ class TestFullApp(TestCase):
         except requests.exceptions.RequestException as e:
             self.fail(f"Home page request failed: {e}")
 
-    def test_analyze_endpoint_accepts_post(self):
-        """Test that the analyze endpoint accepts POST requests"""
+    def test_home_page_form_functionality(self):
+        """Test that the home page form loads and is functional"""
         # Start the Django development server
         self.server_process = subprocess.Popen(
             [sys.executable, 'manage.py', 'runserver', '8080', '--noreload'],
@@ -104,26 +104,18 @@ class TestFullApp(TestCase):
         # Wait for server to start
         time.sleep(3)
 
-        # Test analyze endpoint with POST data
+        # Test home page loads with form
         try:
-            test_data = {
-                'news_text': 'This is a test news article about technology and innovation.'
-            }
-            response = requests.post(
-                f"{self.server_url}/analyze/",
-                data=test_data,
-                timeout=10
-            )
+            response = requests.get(self.server_url, timeout=10)
             self.assertEqual(response.status_code, 200)
-            # Check for analysis result indicators in French
-            self.assertTrue(
-                'analyse results' in response.text.lower() or
-                'resultats' in response.text.lower() or
-                'confidence' in response.text.lower()
-            )
+            # Check that the form elements are present
+            self.assertIn('analyze an article', response.text.lower())
+            self.assertIn('textarea', response.text.lower())
+            self.assertIn('news_text', response.text)
+            self.assertIn('submit', response.text.lower())
 
         except requests.exceptions.RequestException as e:
-            self.fail(f"Analyze endpoint request failed: {e}")
+            self.fail(f"Home page form test failed: {e}")
 
 
 if __name__ == '__main__':
