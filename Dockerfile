@@ -1,4 +1,4 @@
-# Flask fake-news-detector container
+# Django fake-news-detector container
 FROM python:3.10-slim
 
 WORKDIR /app
@@ -15,9 +15,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy source
 COPY . .
 
-# Expose Flask port
+# Django settings
+ENV DJANGO_SETTINGS_MODULE=fakenews_detector.settings
+ENV DEBUG=False
 ENV PORT=8080
+
+# Expose port
 EXPOSE 8080
 
 # Default command
-CMD ["python", "app.py"]
+CMD ["gunicorn", "fakenews_detector.wsgi:application", "--bind", "0.0.0.0:8080", "--timeout", "120"]

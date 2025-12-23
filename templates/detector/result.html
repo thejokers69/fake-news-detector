@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% block title %}Analysis Results - Fake News Detector{% endblock %}
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <!-- Back Button -->
+        <div class="mb-4">
+          <a href="{% url 'detector:home' %}" class="btn btn-outline-primary">
+            <i class="fa-solid fa-arrow-left me-2"></i>
+            Analyze another article
+          </a>
+        </div>
+
+        {% if prediction %}
+        {% if prediction.label == 'Erreur' %}
+        <!-- Error Result -->
+        <div class="card result-card error-result mb-4">
+          <div class="card-body p-4 text-center">
+            <div class="mb-3">
+              <i
+                class="fa-solid fa-triangle-exclamation text-warning fa-3x"
+              ></i>
+            </div>
+            <h3 class="text-warning mb-3">Analysis Error</h3>
+            <p class="text-muted mb-0">
+              {{ prediction.error|default:"An error occurred during analysis."
+              }}
+            </p>
+          </div>
+        </div>
+        {% else %}
+        {% if prediction.label == 'Fake' %}
+        <!-- Main Result Card - Fake -->
+        <div class="card result-card mb-4 fake-result">
+          <div class="card-body p-4 p-md-5 text-center">
+            <div class="result-icon mb-4">
+              <i class="fa-solid fa-triangle-exclamation fa-4x text-danger"></i>
+            </div>
+
+            <h2 class="mb-3 text-danger">
+              Article suspected of disinformation
+            </h2>
+
+            <p class="lead text-muted mb-4">
+              LogisticRegression model (TF-IDF bi-grams) trained on
+              DATASETS/True.csv and DATASETS/Fake.csv.
+            </p>
+
+            <!-- Result Badge and Confidence -->
+            <div class="d-flex justify-content-center align-items-center gap-4 mb-4">
+              <span class="badge rounded-pill fs-6 px-4 py-2 bg-danger">
+                Fake
+              </span>
+              <div class="text-center">
+                <div class="h5 mb-1">Confidence: {{ prediction.confidence_percent }}%</div>
+                <small class="text-muted">Model certainty level</small>
+              </div>
+            </div>
+
+            <!-- Confidence Progress Bar -->
+            <div class="confidence-bar bg-light mb-4" role="progressbar">
+              <div
+                class="progress-bar bg-danger"
+                style="width: {{ prediction.confidence_percent }}%"
+                aria-valuenow="{{ prediction.confidence_percent }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
+            </div>
+        {% else %}
+        <!-- Main Result Card - Real -->
+        <div class="card result-card mb-4 real-result">
+          <div class="card-body p-4 p-md-5 text-center">
+            <div class="result-icon mb-4">
+              <i class="fa-solid fa-shield-check fa-4x text-success"></i>
+            </div>
+
+            <h2 class="mb-3 text-success">
+              Article probably authentic
+            </h2>
+
+            <p class="lead text-muted mb-4">
+              LogisticRegression model (TF-IDF bi-grams) trained on
+              DATASETS/True.csv and DATASETS/Fake.csv.
+            </p>
+
+            <!-- Result Badge and Confidence -->
+            <div class="d-flex justify-content-center align-items-center gap-4 mb-4">
+              <span class="badge rounded-pill fs-6 px-4 py-2 bg-success">
+                Real
+              </span>
+              <div class="text-center">
+                <div class="h5 mb-1">Confidence: {{ prediction.confidence_percent }}%</div>
+                <small class="text-muted">Model certainty level</small>
+              </div>
+            </div>
+
+            <!-- Confidence Progress Bar -->
+            <div class="confidence-bar bg-light mb-4" role="progressbar">
+              <div
+                class="progress-bar bg-success"
+                style="width: {{ prediction.confidence_percent }}%"
+                aria-valuenow="{{ prediction.confidence_percent }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
+            </div>
+
+            <!-- Technical Details -->
+            <div class="row text-start">
+              <div class="col-md-6">
+                <h6 class="text-muted mb-2">
+                  <i class="fa-solid fa-cogs me-2"></i>
+                  Technical Details
+                </h6>
+                <ul class="list-unstyled small">
+                  <li><strong>Algorithm:</strong> LogisticRegression</li>
+                  <li>
+                    <strong>Vectorization:</strong> TF-IDF (5,000 features)
+                  </li>
+                  <li>
+                    <strong>Preprocessing:</strong> Stop words, Lemmatization
+                  </li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <h6 class="text-muted mb-2">
+                  <i class="fa-solid fa-chart-bar me-2"></i>
+                  Model Metrics
+                </h6>
+                <ul class="list-unstyled small">
+                  <li><strong>Overall Accuracy:</strong> 98.9%</li>
+                  <li><strong>Precision (Real):</strong> 99%</li>
+                  <li><strong>Precision (Fake):</strong> 99%</li>
+                  <li>
+                    <strong>Training Data:</strong> 44,898 articles
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Input Preview -->
+        {% if prediction.input_preview %}
+        <div class="card shadow-sm">
+          <div class="card-header">
+            <h6 class="mb-0">
+              <i class="fa-solid fa-file-text me-2"></i>
+              Analyzed excerpt ({{ prediction.input_length }} characters){% if prediction.input_length > 240 %}…{% endif %}
+            </h6>
+          </div>
+          <div class="card-body">
+            <blockquote class="blockquote mb-0">
+              <p class="mb-0 text-muted fst-italic">
+                "{{ prediction.input_preview }}"
+              </p>
+            </blockquote>
+          </div>
+        </div>
+        {% endif %}
+        {% endif %}
+        {% else %}
+        <!-- No prediction available -->
+        <div class="card result-card error-result">
+          <div class="card-body p-4 text-center">
+            <div class="mb-3">
+              <i class="fa-solid fa-question-circle text-warning fa-3x"></i>
+            </div>
+            <h3 class="text-warning mb-3">No Result</h3>
+            <p class="text-muted mb-0">
+              No analysis result is available.
+              <a href="{% url 'detector:home' %}">Back to home</a>
+            </p>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

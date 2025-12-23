@@ -17,26 +17,29 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 import warnings
-warnings.filterwarnings('ignore')
+
+warnings.filterwarnings("ignore")
 
 # Configuration
-DATASETS_DIR = 'DATASETS'
-MODELS_DIR = 'models'
-TRUE_FILE = os.path.join(DATASETS_DIR, 'True.csv')
-FAKE_FILE = os.path.join(DATASETS_DIR, 'Fake.csv')
-MODEL_PATH = os.path.join(MODELS_DIR, 'fake_news_model.pkl')
-VECTORIZER_PATH = os.path.join(MODELS_DIR, 'tfidf_vectorizer.pkl')
+DATASETS_DIR = "data"
+MODELS_DIR = "models"
+TRUE_FILE = os.path.join(DATASETS_DIR, "True.csv")
+FAKE_FILE = os.path.join(DATASETS_DIR, "Fake.csv")
+MODEL_PATH = os.path.join(MODELS_DIR, "fake_news_model.pkl")
+VECTORIZER_PATH = os.path.join(MODELS_DIR, "tfidf_vectorizer.pkl")
+
 
 # Téléchargement des ressources NLTK
 def download_nltk_resources():
     """Télécharge les ressources NLTK nécessaires"""
     try:
-        nltk.download('stopwords', quiet=True)
-        nltk.download('wordnet', quiet=True)
-        nltk.download('omw-1.4', quiet=True)
+        nltk.download("stopwords", quiet=True)
+        nltk.download("wordnet", quiet=True)
+        nltk.download("omw-1.4", quiet=True)
         print("Ressources NLTK telechargees")
     except Exception as e:
         print(f"Attention: Erreur lors du telechargement NLTK : {e}")
+
 
 def load_data():
     """Charge et combine les datasets"""
@@ -45,12 +48,12 @@ def load_data():
     try:
         # Charger les données vraies
         df_true = pd.read_csv(TRUE_FILE)
-        df_true['label'] = 0  # 0 = Real news
+        df_true["label"] = 0  # 0 = Real news
         print(f"Dataset True.csv charge : {len(df_true)} articles")
 
         # Charger les données fake
         df_fake = pd.read_csv(FAKE_FILE)
-        df_fake['label'] = 1  # 1 = Fake news
+        df_fake["label"] = 1  # 1 = Fake news
         print(f"Dataset Fake.csv charge : {len(df_fake)} articles")
 
         # Combiner les datasets
@@ -63,6 +66,7 @@ def load_data():
         print(f"Erreur lors du chargement des donnees : {e}")
         return None
 
+
 def preprocess_text(text, lemmatizer, stop_words):
     """Prétraite le texte (identique à app.py)"""
     if not isinstance(text, str) or not text.strip():
@@ -72,7 +76,7 @@ def preprocess_text(text, lemmatizer, stop_words):
     text = text.lower()
 
     # Suppression des caractères spéciaux et chiffres
-    text = re.sub(r'[^a-zA-Z\s]', '', text)
+    text = re.sub(r"[^a-zA-Z\s]", "", text)
 
     # Tokenization
     words = text.split()
@@ -81,7 +85,8 @@ def preprocess_text(text, lemmatizer, stop_words):
     words = [lemmatizer.lemmatize(word) for word in words if word not in stop_words]
 
     # Rejoindre les mots
-    return ' '.join(words)
+    return " ".join(words)
+
 
 def prepare_features(df):
     """Prépare les features pour l'entraînement"""
@@ -89,20 +94,21 @@ def prepare_features(df):
 
     # Initialisation NLTK
     lemmatizer = WordNetLemmatizer()
-    stop_words = set(stopwords.words('english'))
+    stop_words = set(stopwords.words("english"))
 
     # Combiner title + text
     print("Combinaison titre + texte...")
-    df['combined_text'] = df['title'] + ' ' + df['text']
+    df["combined_text"] = df["title"] + " " + df["text"]
 
     # Prétraitement
     print("Nettoyage Prétraitement du texte...")
-    df['processed_text'] = df['combined_text'].apply(
+    df["processed_text"] = df["combined_text"].apply(
         lambda x: preprocess_text(x, lemmatizer, stop_words)
     )
 
     print("OK Prétraitement terminé")
     return df
+
 
 def train_model(X_train, X_test, y_train, y_test):
     """Entraîne le modèle"""
@@ -113,8 +119,8 @@ def train_model(X_train, X_test, y_train, y_test):
     vectorizer = TfidfVectorizer(
         max_features=5000,  # Limiter à 5000 features pour performance
         ngram_range=(1, 2),  # Unigrams et bigrams
-        min_df=5,            # Mot présent dans au moins 5 documents
-        max_df=0.7           # Mot présent dans max 70% des documents
+        min_df=5,  # Mot présent dans au moins 5 documents
+        max_df=0.7,  # Mot présent dans max 70% des documents
     )
 
     X_train_vectorized = vectorizer.fit_transform(X_train)
@@ -124,11 +130,7 @@ def train_model(X_train, X_test, y_train, y_test):
 
     # Entraînement du modèle
     print("Entrainement Entraînement du classifieur LogisticRegression...")
-    model = LogisticRegression(
-        random_state=42,
-        max_iter=1000,
-        C=1.0
-    )
+    model = LogisticRegression(random_state=42, max_iter=1000, C=1.0)
 
     model.fit(X_train_vectorized, y_train)
     print("OK Modèle entraîné")
@@ -141,7 +143,7 @@ def train_model(X_train, X_test, y_train, y_test):
     print(f"Precision Accuracy: {accuracy:.3f}")
     # Rapport détaillé
     print("\nRapport Rapport de classification :")
-    print(classification_report(y_test, y_pred, target_names=['Real', 'Fake']))
+    print(classification_report(y_test, y_pred, target_names=["Real", "Fake"]))
 
     # Matrice de confusion
     cm = confusion_matrix(y_test, y_pred)
@@ -152,6 +154,7 @@ def train_model(X_train, X_test, y_train, y_test):
     print(f"Fake prédits Fake: {cm[1][1]}")
 
     return model, vectorizer, accuracy
+
 
 def save_models(model, vectorizer):
     """Sauvegarde les modèles"""
@@ -167,6 +170,7 @@ def save_models(model, vectorizer):
     # Sauvegarder le vectorizer
     joblib.dump(vectorizer, VECTORIZER_PATH)
     print(f"OK Vectorizer sauvegardé : {VECTORIZER_PATH}")
+
 
 def main():
     """Fonction principale"""
@@ -186,8 +190,8 @@ def main():
 
     # Séparation train/test
     print("Separation  Séparation train/test...")
-    X = df['processed_text']
-    y = df['label']
+    X = df["processed_text"]
+    y = df["label"]
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42, stratify=y
     )
@@ -207,6 +211,7 @@ def main():
     print("   1. Les fichiers sont sauvegardés dans le dossier 'models/'")
     print("   2. Lancez l'application : python app.py")
     print("   3. Testez avec des articles sur http://127.0.0.1:8080/")
+
 
 if __name__ == "__main__":
     main()
