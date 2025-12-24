@@ -65,23 +65,42 @@ def load_models():
 
 
 def preprocess_text(text):
-    """Preprocess text the same way as during training"""
+    """Preprocess text the same way as during training.
+
+    This function is robust to being called before models are loaded by
+    initializing `lemmatizer` and `stop_words` lazily.
+    """
+    global lemmatizer, stop_words
+
     if not isinstance(text, str) or not text.strip():
         return ""
 
-    # Conversion en minuscules
-    text = text.lower()
+    # Ensure local resources are initialized
+    if lemmatizer is None:
+        lemmatizer = WordNetLemmatizer()
+    if stop_words is None:
+        try:
+            stop_words = set(stopwords.words("english"))
+        except Exception:
+            # Fallback to an empty set if NLTK resources are missing
+            stop_words = set()
 
-    # Suppression des caractères spéciaux et chiffres
-    text = re.sub(r"[^a-zA-Z\s]", "", text)
+    # Remove HTML tags
+    text = re.sub(r"<.*?>", " ", text)
 
-    # Tokenization
-    words = text.split()
+    # Remove URLs
+    text = re.sub(r"http\S+|www\S+", " ", text)
 
-    # Suppression des stop words et lemmatization
-    words = [lemmatizer.lemmatize(word) for word in words if word not in stop_words]
+    # Keep letters and whitespace only
+    text = re.sub(r"[^a-zA-Z\s]", " ", text)
 
-    # Rejoindre les mots
+    # Collapse whitespace and lowercase
+    text = re.sub(r"\s+", " ", text).strip().lower()
+
+    # Tokenize, remove stop words, lemmatize
+    words = [w for w in text.split() if w not in stop_words]
+    words = [lemmatizer.lemmatize(w) for w in words]
+
     return " ".join(words)
 
 
