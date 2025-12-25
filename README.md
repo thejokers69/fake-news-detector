@@ -4,7 +4,7 @@ A Django-based web application that uses machine learning to detect fake news ar
 
 ## ✨ Features
 
-- 🧠 **Machine Learning**: Logistic Regression model trained on 44,898 articles
+- 🧠 **Machine Learning**: Calibrated LinearSVC (SVM) model trained on 44,898 articles
 - 🎯 **High Accuracy**: 98.9% precision on real vs fake news detection
 - 🌐 **Web Interface**: Clean, responsive Django web application
 - 📊 **Real-time Analysis**: Instant predictions with probability scores
@@ -108,7 +108,7 @@ python train.py
 1. **Lancez l'application :**
 
 ```bash
-python app.py
+python manage.py runserver
 ```
 
 ## 📁 Project Structure
@@ -182,7 +182,7 @@ fake-news-detector/
 The model uses:
 
 - **Vectorizer**: TF-IDF vectorizer with 5000 features
-- **Algorithm**: Logistic Regression (binary classification)
+- **Algorithm**: Calibrated LinearSVC (LinearSVC + CalibratedClassifierCV) (SVM) (binary classification)
 - **Preprocessing**: Text cleaning, stop word removal, lemmatization
 - **Training Data**: 44,898 articles (21,417 real + 23,481 fake)
 - **Accuracy**: 98.9% on test set

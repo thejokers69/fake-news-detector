@@ -44,7 +44,7 @@
             </h2>
 
             <p class="lead text-muted mb-4">
-              LogisticRegression model (TF-IDF bi-grams) trained on
+              Calibrated LinearSVC (SVM) model (TF‑IDF n‑grams 1–3) trained on
               DATASETS/True.csv and DATASETS/Fake.csv.
             </p>
 
@@ -82,7 +82,7 @@
             </h2>
 
             <p class="lead text-muted mb-4">
-              LogisticRegression model (TF-IDF bi-grams) trained on
+              Calibrated LinearSVC (SVM) model (TF‑IDF n‑grams 1–3) trained on
               DATASETS/True.csv and DATASETS/Fake.csv.
             </p>
 
@@ -116,7 +116,7 @@
                   Technical Details
                 </h6>
                 <ul class="list-unstyled small">
-                  <li><strong>Algorithm:</strong> LogisticRegression</li>
+                  <li><strong>Algorithm:</strong> Calibrated LinearSVC (LinearSVC + CalibratedClassifierCV) (SVM)</li>
                   <li>
                     <strong>Vectorization:</strong> TF-IDF (5,000 features)
                   </li>

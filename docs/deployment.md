@@ -16,7 +16,7 @@
 
 - **Framework:** Django 4.2.25
 - **Frontend:** Bootstrap 5.3.2 + FontAwesome
-- **Machine Learning:** scikit-learn + LogisticRegression
+- **Machine Learning:** scikit-learn + Calibrated LinearSVC (SVM)
 - **Server:** Gunicorn (production) / Django dev server (development)
 
 ### **Project Structure:**
@@ -126,7 +126,7 @@ heroku open
 - **Accuracy:** 98.9%
 - **Precision:** 99% (Real & Fake)
 - **Dataset:** 44,898 articles (True.csv + Fake.csv)
-- **Algorithm:** LogisticRegression + TF-IDF
+- **Algorithm:** Calibrated LinearSVC (LinearSVC + CalibratedClassifierCV) + TF‑IDF (n‑grams 1–3)
 
 ## 🎯 **Available URLs**
 

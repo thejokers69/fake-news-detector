@@ -20,16 +20,16 @@ Ce projet détecte automatiquement si un article de presse est une **fake news**
 
 ### 3. 🏗️ Racine - Code principal
 
-- **Application web** : `app.py`
-- **Entraînement** : `train_model.py`
-- **Démarrage** : `start.py`
+- **Application web** : `manage.py runserver`
+- **Entraînement** : `ml/train.py`
+- **Démarrage** : `python manage.py runserver`
 
 ## 🖥️ Comment lancer l'application
 
 ### Étape 1 : Démarrer l'application
 
 ```bash
-python start.py
+python manage.py runserver
 ```
 
 ### Étape 2 : Ouvrir dans le navigateur
@@ -56,7 +56,7 @@ python start.py
 
 ### L'application web
 
-- **Framework** : Flask (Python)
+- **Framework** : Django (Python)
 - **Interface** : Bootstrap (responsive)
 - **API** : Routes GET/POST pour l'analyse
 
@@ -101,7 +101,7 @@ python Tests/test_full_app.py
 
 Si ça ne fonctionne pas :
 
-1. Vérifiez que l'application tourne (`python start.py`)
+1. Vérifiez que l'application tourne (`python manage.py runserver`)
 2. Utilisez les exemples du dossier `Exemples/`
 3. Copiez seulement le texte principal (sans guillemets)
 4. Rafraîchissez la page si nécessaire
