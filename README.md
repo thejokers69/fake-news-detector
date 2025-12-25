@@ -304,6 +304,7 @@ with open('../examples/fake_news.txt', 'w') as f:
     for text in fake_df['text'].head(10):
         f.write(text[:500] + '...\n\n')
 "
+```
 
 ## 🤝 Contributing
 
@@ -322,6 +323,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Dataset from [Kaggle Fake News Detection](https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset)
 - Built with Django, scikit-learn, and NLTK
 - Icons from [Font Awesome](https://fontawesome.com/)
+
+## 🤝 Collaborateurs
+
+Merci aux contributeurs de ce projet :
+
+- **Mohamed Lakssir** — [thejokers69](https://github.com/thejokers69) — Propriétaire du dépôt
+- **Houssam Aoun** — [AuroreTBF](https://github.com/AuroreTBF)
+- **Ahchouche Firdawsse** — [Firdaws73](https://github.com/Firdaws73)
+- **Feth‑Eddine Zineb** — [zinebfthdn](https://github.com/zinebfthdn)
+
+Consultez `CONTRIBUTORS.md` pour plus de détails.
 
 ## ⚠️ Avertissement
 
