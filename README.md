@@ -11,6 +11,12 @@ A Django-based web application that uses machine learning to detect fake news ar
 - 🐳 **Docker Ready**: Easy deployment with Docker & Docker Compose
 - ☁️ **Heroku Compatible**: Ready for cloud deployment
 
+## 🌐 Live Demo
+
+🚀 **Try it now:** [https://my-fake-news-detector-b2ecef362ddb.herokuapp.com/](https://my-fake-news-detector-b2ecef362ddb.herokuapp.com/)
+
+Experience real-time fake news detection with our deployed application!
+
 ## 🚀 Quick Start
 
 ### Prerequisites
